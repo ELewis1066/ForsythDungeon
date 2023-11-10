@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class Player
+    public class Player
     {
         // attributes/properties
         private int Health;
@@ -49,6 +49,8 @@ namespace Dungeon
             Health += health;
             return Health;
         }
+
+
         public Boolean DoCommand(String command)
         {
             if (command == "QUIT")
@@ -57,6 +59,7 @@ namespace Dungeon
             }
 
             List<String> instructions = command.Split(' ').ToList();
+
 
             switch (instructions[0])
             {
@@ -80,8 +83,20 @@ namespace Dungeon
                     break;
                 case "get":
                 case "take":
-                    Inventory.Add(Location.RemoveItem(instructions[1]));
+
+                    string nameOfItem = instructions[1];
+                    if (Location.ContainsName(nameOfItem))
+                    {
+                        Item removedItem = Location.RemoveItem(nameOfItem);
+                        Inventory.Add(removedItem);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Item {nameOfItem} does not exist in the location.");
+                    }
+                    //Inventory.Add(Location.RemoveItem(instructions[1]));
                     break;
+
                 case "drop":
                     string itemToDrop = instructions[1];
                     Item droppedItem = null;
@@ -110,6 +125,20 @@ namespace Dungeon
                         if (creature.GetName() == instructions[1])
                         {
                             int damage = random.Next(1, 100);
+                            // if there is a 3rd instruction & the 3rd instruction is a weapon
+                            // item, then multiply the damage by the damage multiplier of the
+                            // weapon.
+                            // e.g. allow 'attack dragon' or 'attack dragon sword'.
+                            if (instructions.Count > 2)
+                            {
+                                string name = instructions[2];
+                                Item? found = Inventory.Find(item => item.IsWeapon() && item.GetName() == name);
+                                if (found != null)
+                                {
+                                    Console.WriteLine($"Attacking with {name}");
+                                    damage *= found.GetDamageMultiplier();
+                                }
+                            }
                             bool dead = creature.TakeDamage(damage);
                             if (dead)
                             {
@@ -219,29 +248,12 @@ namespace Dungeon
                     break;
                 case "inventory":
                 case "i":
-                    String items = "\n";
-
-                    if (Inventory.Count > 0)
+                    if (Inventory.Count == 0)
                     {
-                        if (Inventory.Count == 1)
-                        {
-                            items += $"You have the following item: {Inventory[0].GetName()}.";
-                        }
-                        else
-                        {
-                            items += $"You have the following items: {Inventory[0].GetName()}";
-                            for (int i = 1; i < Inventory.Count - 1; i++)
-                            {
-                                items += ", " + Inventory[i].GetName();
-                            }
-                            items += $" and {Inventory[Inventory.Count - 1].GetName()}.";
-                        }
+                        Console.WriteLine("You aren't carrying anything.");
                     }
-                    else
-                    {
-                        items += "You aren't carrying anything.";
-                    }
-                    Console.WriteLine(items);
+                    Console.WriteLine("You have the following items:");
+                    Console.WriteLine(String.Join("\n", Inventory));
                     break;
                 default:
                     Console.WriteLine("You can't do that!");
@@ -274,26 +286,23 @@ namespace Dungeon
         }
         private void Eat(string food)
         {
-            int foodPosition;
-
-            for (foodPosition = 0; foodPosition < Inventory.Count; foodPosition++)
+            // Handles case where we have items {apple, apple, apple} say
+            // and the first apple is not edible. Code breaks, but we could have
+            // found an edible apple if we had searched the whole list.
+            Item? found = Inventory.Find(item => item.IsEdible() && item.GetName() == food);
+            if (found != null)
             {
-                Item? item = Inventory[foodPosition];
-                if (item.GetName() == food)
-                {
-                    if (item.IsEdible())
-                    //if (item.GetType() == typeof(FoodItem))
-                    {
-                        Health += Inventory[foodPosition].GetHeals();
-                        Inventory.RemoveAt(foodPosition);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry, {food} is not edible.");
-                    }
-                    break;
-                }
+                Health += found.GetHeals();
+                Inventory.Remove(found);
+            }
+            else
+            {
+                Console.Write($"Could not find an edible item of name: {food}");
             }
         }
+
+
+
     }
+    
 }

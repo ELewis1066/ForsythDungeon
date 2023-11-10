@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class Creature
+    public class Creature
     {
         private string Name;
         private int Health;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Dungeon
 {
 
-    class DragonCreature : Creature
+    public class DragonCreature : Creature
     {
         public DragonCreature() : base("dragon", 100) { }
 

@@ -6,11 +6,43 @@ using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class Connection
+    public class Connection
     {
         private Room RoomFrom;
         private Room RoomTo;
         private String Direction;
+
+        public static void MakeConnection(Room roomFrom, Room roomTo, String direction)
+        {
+           
+
+            string opposite = string.Empty;
+            switch (direction)
+            {
+                case "north":
+                    opposite = "south";
+                    break;
+                
+                case "south":
+                    opposite = "north";
+                    break;
+
+                case "west":
+                    opposite = "east";
+                    break;
+
+                case "east":
+                    opposite = "west";
+                    break;
+                default:
+                    throw new Exception("Unknown direction building room.");
+            }
+
+            Connection from = new Connection(roomFrom, roomTo, direction);
+            Connection to = new Connection(roomTo, roomFrom, opposite);
+            roomFrom.AddConnection(from);
+            roomTo.AddConnection(to);
+        }
 
         public Connection(Room roomFrom, Room roomTo, String direction)
         {

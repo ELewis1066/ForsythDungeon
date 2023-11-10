@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class Item
+    public class Item
     {
         protected String Name;
         protected String Description;
@@ -19,6 +19,11 @@ namespace Dungeon
         public virtual int GetHeals()
         {
             return 0;
+        }
+
+        public virtual int GetDamageMultiplier()
+        {
+            return 1; 
         }
         public String GetName()
         {
@@ -38,5 +43,12 @@ namespace Dungeon
         }
 
         public virtual bool IsEdible() { return false; }
+
+        public virtual bool IsWeapon() { return false; }
+
+        public override string ToString()
+        {
+            return $"(item) {Name}, {Description}";
+        }
     }
 }

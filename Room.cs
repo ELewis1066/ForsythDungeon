@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class Room
+    public class Room
     {
         private String Description;
         private List<Item> Contents = new List<Item>();
@@ -33,6 +34,16 @@ namespace Dungeon
         {
             Creatures.Remove(creature);
         }
+
+        public bool ContainsName(String name)
+        {
+            foreach (Item item in Contents)
+            {
+                if (item.GetName().Equals(name)) return true;
+            }
+            return false;
+        }
+
         public Item RemoveItem(String name)
         {
             foreach (Item item in Contents)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dungeon
 {
-    class FoodItem : Item
+    public class FoodItem : Item
     {
         private int HealAmount;
         public FoodItem(String name, String description, int heals) : base(name, description)
@@ -22,5 +22,12 @@ namespace Dungeon
         {
             return true;
         }
+
+        public override string ToString()
+        {
+            return $"(food) {Name}, {Description} Heal amount: {HealAmount}";
+        }
+
+
     }
 }
