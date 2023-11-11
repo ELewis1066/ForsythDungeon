@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -124,7 +126,7 @@ namespace Dungeon
                     {
                         if (creature.GetName() == instructions[1])
                         {
-                            int damage = random.Next(1, 100);
+                            int damage = random.Next(1, 20);
                             // if there is a 3rd instruction & the 3rd instruction is a weapon
                             // item, then multiply the damage by the damage multiplier of the
                             // weapon.
@@ -165,7 +167,15 @@ namespace Dungeon
                     }
                     if (deadCreature != null)
                     {
+                        // first, remove the creature from the room.
                         Location.RemoveCreature(deadCreature);
+                        // does the creature drop an item on death?
+                        Item? onDeathItem = deadCreature.OnDeathDrop();
+                        if (onDeathItem != null)
+                        {
+                            Location.AddItem(onDeathItem);
+                            Console.WriteLine($"The creature is dead, it drops a {onDeathItem.GetName()}");
+                        }
                     }
                     break;
                 case "cast":

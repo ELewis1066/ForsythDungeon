@@ -9,7 +9,9 @@ namespace Dungeon
 {
     public class Room
     {
-        private String Description;
+        // Make this readable, GetDescription should be moved to 'ToString'.
+        public String Description { get; set; }
+
         private List<Item> Contents = new List<Item>();
         private List<Creature> Creatures = new List<Creature>();
         private List<Connection> Connections = new List<Connection>();
@@ -18,6 +20,8 @@ namespace Dungeon
         {
             Description = description;
         }
+
+        
         public void AddItem(Item item)
         {
             Contents.Add(item);

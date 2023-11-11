@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Creatures
 {
 
     public class DragonCreature : Creature
@@ -13,7 +13,7 @@ namespace Dungeon
 
         public override int GetAttackDamage()
         {
-            if (random.Next(1, 3) == 1)
+            if (random.Next(1, 10) == 1)
             {
                 Console.WriteLine("The dragon engulfs you with his fiery breath");
                 return 9999999;
@@ -23,6 +23,11 @@ namespace Dungeon
                 return base.GetAttackDamage();
             }
         }
+        public override Item? OnDeathDrop()
+        {
+            return new WeaponItem("holySword", "a weapon crafted by the Archangels of heaven", 4);
+        }
+
         public override bool TakeSpellDamage(string spell, int damage)
         {
             if (spell == "frostbolt")

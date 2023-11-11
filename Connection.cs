@@ -44,7 +44,7 @@ namespace Dungeon
             roomTo.AddConnection(to);
         }
 
-        public Connection(Room roomFrom, Room roomTo, String direction)
+        private Connection(Room roomFrom, Room roomTo, String direction)
         {
             RoomFrom = roomFrom;
             RoomTo = roomTo;
