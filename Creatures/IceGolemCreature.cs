@@ -8,12 +8,18 @@ namespace Dungeon.Creatures
 {
     public class IceGolemCreature : Creature
     {
-        public IceGolemCreature() : base("iceGolem", 80) { }
+        public IceGolemCreature() : base("iceGolem", 800) { }
 
         public override Item? OnDeathDrop()
         {
             return new WeaponItem("iceClub", "formed eons ago from the Great Ice Mage; the golems strength is with you", 3);
         }
+
+        public override int OnDeathGiveXp()
+        {
+            return 450;
+        }
+
 
         public override int GetAttackDamage()
         {

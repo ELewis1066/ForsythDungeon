@@ -21,7 +21,7 @@ namespace Dungeon
 
         public virtual int GetAttackDamage()
         {
-            return (random.Next(10, 50));
+            return (random.Next(50, 200));
         }
         public int GetHealth()
         {
@@ -49,6 +49,8 @@ namespace Dungeon
         }
 
         public virtual Item? OnDeathDrop() { return null; }
+
+        public virtual int OnDeathGiveXp() { return 50; }
 
         public virtual bool TakeSpellDamage(string spell, int damage)
         {

@@ -9,7 +9,7 @@ namespace Dungeon.Creatures
 
     public class DragonCreature : Creature
     {
-        public DragonCreature() : base("dragon", 100) { }
+        public DragonCreature() : base("dragon", 1000) { }
 
         public override int GetAttackDamage()
         {
@@ -27,6 +27,12 @@ namespace Dungeon.Creatures
         {
             return new WeaponItem("holySword", "a weapon crafted by the Archangels of heaven", 4);
         }
+
+        public override int OnDeathGiveXp()
+        {
+            return 600;
+        }
+
 
         public override bool TakeSpellDamage(string spell, int damage)
         {

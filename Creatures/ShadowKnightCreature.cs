@@ -8,7 +8,7 @@ namespace Dungeon.Creatures
 {
     public class ShadowKnightCreature : Creature
     {
-        public ShadowKnightCreature() : base("shadowKnight", 95) { }
+        public ShadowKnightCreature() : base("shadowKnight", 950) { }
 
         public override int GetAttackDamage()
         {
@@ -22,6 +22,12 @@ namespace Dungeon.Creatures
                 return base.GetAttackDamage();
             }
         }
+
+        public override int OnDeathGiveXp()
+        {
+            return 650;
+        }
+
 
         public override Item? OnDeathDrop()
         {

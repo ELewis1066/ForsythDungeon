@@ -8,7 +8,13 @@ namespace Dungeon.Creatures
 {
     public class CelestialHolyKingCreature : Creature
     {
-        public CelestialHolyKingCreature() : base("celstialHolyKing", 150) { }
+        public CelestialHolyKingCreature() : base("celstialHolyKing", 2000) { }
+
+
+        public override int OnDeathGiveXp() 
+        { 
+            return 1000; 
+        }
 
         public override int GetAttackDamage()
         {

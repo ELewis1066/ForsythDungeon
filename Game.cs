@@ -9,7 +9,7 @@ namespace Dungeon
 {
     public class Game
     {
-        private const int STARTING_HEALTH = 100;
+        private const int STARTING_HEALTH = 750;
         public void PlayGame()
         {
             String command = "";
@@ -23,9 +23,9 @@ namespace Dungeon
             Room shadowRoom = new Room("You feel uneasy... like somethings watching you in this vanta black room");
             Room throneRoom = new Room("You are in the room touched by Midas himself, a grand throne lies in front of you with a mysterious figure sitting in it");
 
-            FoodItem healthPotion = new FoodItem("healthPotion", "meticulously crafted by the finest apothecary", 20);
-            FoodItem apple = new FoodItem("apple", "a beautiful rosy red apple, it looks delicious.", 5);
-            FoodItem susApple = new FoodItem("susApple", "the apple rots with bugs embedded in it", -5);
+            FoodItem healthPotion = new FoodItem("healthPotion", "meticulously crafted by the finest apothecary", 175);
+            FoodItem apple = new FoodItem("apple", "a beautiful rosy red apple, it looks delicious.", 15);
+            FoodItem susApple = new FoodItem("susApple", "the apple rots with bugs embedded in it", -30);
 
             Item stoneApple = new Item("apple", "a beautiful apple made of stone.");
             Item water = new Item("water", "Everian, the best!.");
@@ -72,8 +72,8 @@ namespace Dungeon
 
 
             Player pc = new Player(STARTING_HEALTH);
-            pc.AddItem(apple);
-            pc.AddItem(stoneApple);
+            pc.AddToInventory(apple);
+            pc.AddToInventory(stoneApple);
 
          
             List<Room> rooms = new List<Room>
@@ -89,6 +89,20 @@ namespace Dungeon
                  throneRoom,
                  startRoom // keep start room at the end.
             };
+
+            List<Creature> orcs = new List<Creature>();
+            for (int i = 0; i < 5; i++)
+            {
+                orcs.Add(new Creature("orc", 150));
+
+            }
+            /* Randomly distribute the orcs the rooms? */
+            Random random = new Random();
+            foreach (Creature orc in orcs)
+            {
+                var randomRoom = rooms[random.Next(rooms.Count - 1)];
+                randomRoom.AddCreature(orc);
+            }
 
             PruferGenerator generator = new PruferGenerator();
             Room start = generator.Generate(rooms);
@@ -108,7 +122,16 @@ namespace Dungeon
                 Console.ForegroundColor= ConsoleColor.DarkGray;
 
                 Console.WriteLine("\u001b[3m");
-                gameOver = pc.DoCommand(command);
+                
+                
+                // This shows that the game state is just the player class at the moment.
+                // i.e. entire game state is managed by 'Player'.
+
+                // So, we may have a new class
+                // 
+                // GameState that includes a Player object and NPCs etc..
+                // to support 'turns'.
+                gameOver = Command.Execute(command.Split(' ').ToList(), pc);
                 Console.WriteLine(" \u001b[0m");
             }
 
