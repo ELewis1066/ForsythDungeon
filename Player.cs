@@ -17,11 +17,14 @@ namespace Dungeon
         private Dictionary<string, int> SpellBook = new Dictionary<string, int> { { "frostbolt", 50 }, { "lightning", 80 } };
         private Random random;
 
+        // Experience (could be a new class?)
         private static int[] LevelBoundaries = { 1000, 3000, int.MaxValue };
-
         private int Xp;
         private int Level;
         private int LevelDamageBonus;
+
+        // Armour
+        public ArmourItem? ArmourWorn { get; set; }
 
         public Player(int health)
         {
@@ -30,6 +33,51 @@ namespace Dungeon
             Xp = 0;
             Level = 0;
             LevelDamageBonus = 0;
+        }
+
+        public void DisplayArmour(string message)
+        {
+            Console.WriteLine(string.Concat(Enumerable.Repeat("=", message.Length)));
+            Console.WriteLine(message);
+            Console.WriteLine(string.Concat(Enumerable.Repeat("=", message.Length)));
+        }
+        public void WearArmour(string name)
+        {
+            if (ArmourWorn != null) 
+            {
+                Console.WriteLine($"You are already wearning armour {ArmourWorn.GetName()}");
+            }
+            else
+            {
+                /* check that armour exists in inventory. */
+                var found = Inventory.Find(item => item.GetName() == name && item.IsArmour());
+                if (found != null)
+                {
+                    // Downcasting, but better than holding base class pointer.
+                    // We don't want to always through away strong typing.
+                    ArmourWorn = (ArmourItem) found;
+                    DisplayArmour($"| You put on the armour {ArmourWorn.GetName()} |");
+                    Inventory.Remove(found);
+                }
+                else
+                {
+                    Console.WriteLine($"Sorry could not find armour {name}.");
+                }
+            }
+        }
+
+        public void RemoveArmour()
+        {
+            if (ArmourWorn != null)
+            {
+                DisplayArmour($"| You take off your {ArmourWorn.GetName()} armour |");
+                Inventory.Add(ArmourWorn);
+                ArmourWorn = null;
+            }
+            else
+            {
+                Console.WriteLine("You are not wearning any armour!.");
+            }
         }
 
         public int GetXp()

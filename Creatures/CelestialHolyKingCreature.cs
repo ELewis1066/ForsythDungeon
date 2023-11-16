@@ -20,12 +20,12 @@ namespace Dungeon.Creatures
         {
             if (random.Next(1, 6) == 1)
             {
-                Console.WriteLine("He stands behind you telling you; you are strong");
+                Console.WriteLine("He stands behind you telling you; you are strong... be proud");
                 return 9999999;
             }
             else
             {
-                return base.GetAttackDamage();
+                return random.Next(200, 600);
             }
         }
     }

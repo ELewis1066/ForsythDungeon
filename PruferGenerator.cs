@@ -109,7 +109,16 @@ namespace Dungeon
                         break;
                     }
                 }
+
+                // debug, re-roll
+                if (start.GetConnections().Count == 0)
+                {
+                    satisfied = false;
+                }
+
             }
+
+
 
             return start;
         }

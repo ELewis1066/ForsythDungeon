@@ -46,6 +46,8 @@ namespace Dungeon
 
         public virtual bool IsWeapon() { return false; }
 
+        public virtual bool IsArmour() { return false; }
+
         public override string ToString()
         {
             return $"(item) {Name}, {Description}";

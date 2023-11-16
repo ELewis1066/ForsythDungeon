@@ -164,7 +164,17 @@ namespace Dungeon
                     {
                         Console.WriteLine($"Your attack caused the {creature.GetName()} to lose {damage} health.");
                         Console.WriteLine($"The {creature.GetName()} now has {creature.GetHealth()} health left ");
+
+                        // Modify damage damage according to armour class.
                         int damageTaken = creature.GetAttackDamage();
+                        if (player.ArmourWorn != null)
+                        {
+                            int modifer = player.ArmourWorn.ArmourClassModifier;
+                            damageTaken = damageTaken * (100 - modifer) / 100;
+                            Console.Write("Your armour saves some damage, but .. ");
+                        }
+
+
                         Console.WriteLine($"{creature.GetName()} attacks you and causes {damageTaken} damage.");
                         player.TakeDamage(damageTaken);
 
@@ -304,8 +314,19 @@ namespace Dungeon
             {
                 Console.WriteLine("You aren't carrying anything.");
             }
-            Console.WriteLine("You have the following items:");
-            Console.WriteLine(String.Join("\n", player.GetInventory()));
+            else
+            {
+                Console.WriteLine("You have the following items:");
+                Console.WriteLine(String.Join("\n", player.GetInventory()));
+            }
+            if (player.ArmourWorn != null)
+            {
+                Console.WriteLine($"You are wearning {player.ArmourWorn.GetName()}");
+            }
+            else
+            {
+                Console.WriteLine("You are wearing no armour.");
+            }
         }
     }
 
@@ -325,6 +346,24 @@ namespace Dungeon
         public static void DoAction(List<string> instructions, Player player)
         {
             player.SetHealth(0);
+        }
+    }
+
+    public class Wear : IGameAction
+    {
+        public static Action<List<string>, Player> Instance = new Action<List<string>, Player>(Wear.DoAction);
+        public static void DoAction(List<string> instructions, Player player)
+        {
+            player.WearArmour(instructions[1]);
+        }
+    }
+
+    public class Remove : IGameAction
+    {
+        public static Action<List<string>, Player> Instance = new Action<List<string>, Player>(Remove.DoAction);
+        public static void DoAction(List<string> instructions, Player player)
+        {
+            player.RemoveArmour();
         }
     }
 
@@ -358,7 +397,11 @@ namespace Dungeon
                     {"s", Stats.Instance },
                     {"stats", Stats.Instance},
                     {"quit", Quit.Instance },
-                    {"q", Quit.Instance }
+                    {"q", Quit.Instance },
+                    {"w", Wear.Instance },
+                    {"wear", Wear.Instance},
+                    {"r", Remove.Instance},
+                    {"remove", Remove.Instance}
                 };
 
         public static bool Execute(List<string> instructions, Player player)

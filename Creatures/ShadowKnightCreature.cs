@@ -19,7 +19,7 @@ namespace Dungeon.Creatures
             }
             else
             {
-                return base.GetAttackDamage();
+                return random.Next(75, 400);
             }
         }
 

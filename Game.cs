@@ -93,7 +93,7 @@ namespace Dungeon
             List<Creature> orcs = new List<Creature>();
             for (int i = 0; i < 5; i++)
             {
-                orcs.Add(new Creature("orc", 150));
+                orcs.Add(new Creature($"orc_{i}", 150));
 
             }
             /* Randomly distribute the orcs the rooms? */
@@ -104,10 +104,14 @@ namespace Dungeon
                 randomRoom.AddCreature(orc);
             }
 
+    
             PruferGenerator generator = new PruferGenerator();
             Room start = generator.Generate(rooms);
-            pc.SetLocation(start);
+        
+            ArmourItem chainMail = new ArmourItem("chainMail", "Basic Chain mail armour, crafted by royal blacksmiths.", 10);
+            startRoom.AddItem(chainMail);
 
+            pc.SetLocation(start);
 
             
             // play the game
