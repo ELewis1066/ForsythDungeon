@@ -16,6 +16,7 @@ namespace Dungeon
         private List<Creature> Creatures = new List<Creature>();
         private List<Connection> Connections = new List<Connection>();
 
+
         public Room(String description)
         {
             Description = description;
@@ -30,6 +31,7 @@ namespace Dungeon
         {
             Creatures.Add(creature);
         }
+
         public List<Creature> GetCreatures()
         {
             return Creatures;
@@ -46,6 +48,18 @@ namespace Dungeon
                 if (item.GetName().Equals(name)) return true;
             }
             return false;
+        }
+        public Item GetItem(String name)
+        {
+            foreach (Item item in Contents)
+            {
+                if (item.GetName() == name)
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         public Item RemoveItem(String name)

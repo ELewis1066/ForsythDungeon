@@ -87,14 +87,55 @@ namespace Dungeon
         public static void DoAction(List<string> instructions, Player player)
         {
             string nameOfItem = instructions[1];
-            if (player.GetLocation().ContainsName(nameOfItem))
+            if (instructions.Count == 2)
             {
-                Item removedItem = player.GetLocation().RemoveItem(nameOfItem);
-                player.AddToInventory(removedItem);
+                // Look for the item in the room.
+                if (player.GetLocation().ContainsName(nameOfItem))
+                {
+                    Item item = player.GetLocation().GetItem(nameOfItem);
+                    if (item.CanPickUp())
+                    {
+                        Item removedItem = player.GetLocation().RemoveItem(nameOfItem);
+                        player.AddToInventory(removedItem);
+                    }
+                    else
+                    {
+                        Console.WriteLine("The item is too heavy to pick up.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Item {nameOfItem} does not exist in the location.");
+                }
             }
-            else
+            else if (instructions.Count == 3)
             {
-                Console.WriteLine($"Item {nameOfItem} does not exist in the location.");
+                // Look for the item in a chest.
+                // 1. Find the chest.
+                // 2. If the Item is in the chest, remove the item from the chest and put into
+                //    player inventory.
+                string nameOfChest = instructions[2];
+                Item chestItem = player.GetLocation().GetItem(nameOfChest);
+                if (chestItem != null && !chestItem.CanPickUp())
+                {
+                    ChestItem chest = (ChestItem)chestItem;
+                    Item? found = chest.ChestContents.Find(item => item.GetName() == nameOfItem);
+                    if ( found != null)
+                    {
+                        chest.ChestContents.Remove(found);
+                        player.AddToInventory(found);
+                        Console.WriteLine($"You have addded {nameOfItem} to your inventory.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Could not find {nameOfItem} in the chest.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Sorry {nameOfChest} isn't a chest.");
+                }
+
             }
         }
     }
@@ -216,13 +257,20 @@ namespace Dungeon
                 string target = instructions[2];
                 Creature creatureToRemove = null;
 
-                if (player.GetSpellBook().ContainsKey(spell))
+                SpellBookItem? spellBook = player.GetSpellBook();
+                if (spellBook == null)
+                {
+                    Console.WriteLine("Sorry you don't have any spell books.");
+                    return;
+                }
+
+                if (spellBook.ContainsSpell(spell))
                 {
                     foreach (Creature creature in player.GetLocation().GetCreatures())
                     {
                         if (creature.GetName() == target)
                         {
-                            bool dead = creature.TakeSpellDamage(spell, player.GetSpellBook()[spell]);
+                            bool dead = creature.TakeSpellDamage(spell, spellBook.GetDamage(spell));
                             if (dead)
                             {
                                 Console.WriteLine($"Your {spell} killed the {creature.GetName()}");
@@ -230,7 +278,10 @@ namespace Dungeon
                             }
                             else
                             {
-                                player.TakeDamage(creature.GetAttackDamage());
+                                int damage = creature.GetAttackDamage();
+                                Console.WriteLine($"The creature has attacked and caused {damage} damage");
+                                Console.WriteLine($"The creature has {creature.GetHealth()} HP.");
+                                player.TakeDamage(damage);
                             }
                         }
                     }
@@ -367,12 +418,59 @@ namespace Dungeon
         }
     }
 
-    public class Command
+    public class Unlock : IGameAction
     {
-        
-        private static Dictionary<string, Action<List<string>, Player>> actions
-                = new Dictionary<string, Action<List<string>, Player>>
+        public static Action<List<string>, Player> Instance = new Action<List<string>, Player>(Unlock.DoAction);
+        public static void DoAction(List<string> instructions, Player player)
+        {
+            // unlock, chest, key
+            string chestName = instructions[1];
+            string keyName = instructions[2];
+            // 1. find the key in your inventory.
+            var keyResult = player.GetInventory().Find(x => x.GetName() == keyName);
+            if (keyResult != null)
+            {
+                KeyItem keyItem = (KeyItem)keyResult;
+
+                var chest = player.GetLocation().GetContents().Find(item => item.GetName() == chestName);
+
+                if (chest != null)
                 {
+                    ChestItem chestItem = (ChestItem)chest;
+                    if (chestItem.IsLocked)
+                    {
+
+                        chestItem.UnlockChest(keyItem);
+
+        
+                        if (!chestItem.IsLocked)
+                        {
+                            chestItem.DisplayContent();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"The chest {chestName} is already unlocked.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"No chest named {chestName} found in the location.");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"No key named {keyName} found in your inventory.");
+            }
+
+        }
+
+        public class Command
+        {
+
+            private static Dictionary<string, Action<List<string>, Player>> actions
+                    = new Dictionary<string, Action<List<string>, Player>>
+                    {
                     {"l", Look.Instance },
                     {"look", Look.Instance },
                     {"h", Health.Instance },
@@ -401,24 +499,25 @@ namespace Dungeon
                     {"w", Wear.Instance },
                     {"wear", Wear.Instance},
                     {"r", Remove.Instance},
-                    {"remove", Remove.Instance}
-                };
+                    {"remove", Remove.Instance},
+                    {"unlock", Unlock.Instance }
+                    };
 
-        public static bool Execute(List<string> instructions, Player player)
-        {
-            if (actions.ContainsKey(instructions[0]))
+            public static bool Execute(List<string> instructions, Player player)
             {
-                actions[instructions[0]](instructions, player);
-            }
-            else
-            {
-                Console.WriteLine($"Sorry, I don't know how to do {instructions[0]}");
+                if (actions.ContainsKey(instructions[0]))
+                {
+                    actions[instructions[0]](instructions, player);
+                }
+                else
+                {
+                    Console.WriteLine($"Sorry, I don't know how to do {instructions[0]}");
+                }
+
+                return player.IsDead();
             }
 
-            return player.IsDead();
         }
-       
+
     }
-
-
 }

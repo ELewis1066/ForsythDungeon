@@ -13,8 +13,8 @@ namespace Dungeon
         // attributes/properties
         private int Health;
         private Room Location;
+    
         private List<Item> Inventory = new List<Item>();
-        private Dictionary<string, int> SpellBook = new Dictionary<string, int> { { "frostbolt", 50 }, { "lightning", 80 } };
         private Random random;
 
         // Experience (could be a new class?)
@@ -33,6 +33,9 @@ namespace Dungeon
             Xp = 0;
             Level = 0;
             LevelDamageBonus = 0;
+
+            // Give a player a spell book; only one spell book per player right now.
+            Inventory.Add(new SpellBookItem("Minters Spell Book", "A spell book with lots pictures of Llamas - lots of missing pages!"));
         }
 
         public void DisplayArmour(string message)
@@ -104,9 +107,18 @@ namespace Dungeon
         }
 
 
-        public Dictionary<string, int> GetSpellBook()
+        public SpellBookItem? GetSpellBook()
         {
-            return SpellBook;
+            /* Assume just one spell book for now. */
+            Item? found = Inventory.Find(item => item.IsSpellBook());
+            if (found != null)
+            {
+                return (SpellBookItem) found;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public List<Item> GetInventory()
@@ -167,6 +179,7 @@ namespace Dungeon
         {
             Inventory.Remove(item);
         }
+
     }
 }
 

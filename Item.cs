@@ -48,6 +48,11 @@ namespace Dungeon
 
         public virtual bool IsArmour() { return false; }
 
+        public virtual bool IsSpellBook() { return false; }
+
+
+        public virtual bool CanPickUp() { return true; }
+
         public override string ToString()
         {
             return $"(item) {Name}, {Description}";

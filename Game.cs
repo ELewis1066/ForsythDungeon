@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Dungeon.Unlock;
 
 namespace Dungeon
 {
@@ -33,7 +34,9 @@ namespace Dungeon
 
             WeaponItem sword = new WeaponItem("sword", "a basic iron sword crafted by dwarves.", 2);
             WeaponItem greatSword = new WeaponItem("greatSword", "a weapon crafted by the gaints only for the strong.", 3);
-            
+
+            ArmourItem chainMail = new ArmourItem("chainMail", "Basic Chain mail armour, crafted by royal blacksmiths.", 10);
+
             
 
             DragonCreature dragon = new DragonCreature();
@@ -108,12 +111,17 @@ namespace Dungeon
             PruferGenerator generator = new PruferGenerator();
             Room start = generator.Generate(rooms);
         
-            ArmourItem chainMail = new ArmourItem("chainMail", "Basic Chain mail armour, crafted by royal blacksmiths.", 10);
-            startRoom.AddItem(chainMail);
+           
+            //startRoom.AddItem(chainMail);
+            KeyItem key1 = new KeyItem("goldKey", "A large gold key.", 123);
+            ChestItem chest = new ChestItem("oldChest", "A large old chest", 123);
+            chest.PutItemInChest(chainMail);
+
+            startRoom.AddItem(chest);
+            startRoom.AddItem(key1);
 
             pc.SetLocation(start);
 
-            
             // play the game
             while (!gameOver)
             {
@@ -123,11 +131,11 @@ namespace Dungeon
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 command = Console.ReadLine();
-                Console.ForegroundColor= ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
 
                 Console.WriteLine("\u001b[3m");
-                
-                
+
+
                 // This shows that the game state is just the player class at the moment.
                 // i.e. entire game state is managed by 'Player'.
 
