@@ -70,8 +70,30 @@ namespace Dungeon
             throneRoom.AddCreature(celestialHolyKingCreature);
             throneRoom.AddItem(healthPotion);
 
+            Console.WriteLine("Choose your character:");
+            Console.WriteLine("1. Warrior.");
+            Console.WriteLine("2. Magic User.");
+            Console.WriteLine("Any other key for Thief.");
+            char key = Console.ReadKey().KeyChar;
 
-            Player pc = new Player(STARTING_HEALTH);
+            // -- this section could be in a static Player.MakePlayer method.
+            Player pc;
+            switch (key)
+            {
+                case '1':
+                    pc = new WarriorPlayer(STARTING_HEALTH + 10);
+                    break;
+
+                case '2':
+                    pc = new MagicUserPlayer(STARTING_HEALTH - 50);
+                    break;
+
+                default:
+                    pc = new ThiefPlayer(STARTING_HEALTH);
+                    break;
+            }
+            // --
+
             pc.AddToInventory(apple);
             pc.AddToInventory(stoneApple);
 
