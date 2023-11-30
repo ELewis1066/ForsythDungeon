@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dungeon.Items;
 
-namespace Dungeon
+namespace Dungeon.Players
 {
+
     public class Player
     {
+        private Random random;
+
+
         // attributes/properties
         private int Health;
         private Room Location;
-    
-        private List<Item> Inventory = new List<Item>();
-        private Random random;
 
-        // Experience (could be a new class?)
+
+
         private static int[] LevelBoundaries = { 1000, 3000, int.MaxValue };
-        private int Xp;
-        private int Level;
-        private int LevelDamageBonus;
+
+
+        private Inventory _inventory = new Inventory();
+        private readonly Experience _experience = new Experience();
 
         // Armour
         public ArmourItem? ArmourWorn { get; set; }
@@ -30,12 +27,10 @@ namespace Dungeon
         {
             Health = health;
             random = new Random();
-            Xp = 0;
-            Level = 0;
-            LevelDamageBonus = 0;
+
 
             // Give a player a spell book; only one spell book per player right now.
-            Inventory.Add(new SpellBookItem("Minters Spell Book", "A spell book with lots pictures of Llamas - lots of missing pages!"));
+            _inventory.AddItem(new SpellBookItem("Minters Spell Book", "A spell book with lots pictures of Llamas - lots of missing pages!"));
         }
 
         public void DisplayArmour(string message)
@@ -46,21 +41,21 @@ namespace Dungeon
         }
         public void WearArmour(string name)
         {
-            if (ArmourWorn != null) 
+            if (ArmourWorn != null)
             {
                 Console.WriteLine($"You are already wearning armour {ArmourWorn.GetName()}");
             }
             else
             {
                 /* check that armour exists in inventory. */
-                var found = Inventory.Find(item => item.GetName() == name && item.IsArmour());
+                var found = _inventory.ItemList.Find(item => item.GetName() == name && item.IsArmour());
                 if (found != null)
                 {
                     // Downcasting, but better than holding base class pointer.
                     // We don't want to always through away strong typing.
-                    ArmourWorn = (ArmourItem) found;
+                    ArmourWorn = (ArmourItem)found;
                     DisplayArmour($"| You put on the armour {ArmourWorn.GetName()} |");
-                    Inventory.Remove(found);
+                    _inventory.RemoveItem(found);
                 }
                 else
                 {
@@ -74,46 +69,48 @@ namespace Dungeon
             if (ArmourWorn != null)
             {
                 DisplayArmour($"| You take off your {ArmourWorn.GetName()} armour |");
-                Inventory.Add(ArmourWorn);
+                _inventory.AddItem(ArmourWorn);
                 ArmourWorn = null;
             }
             else
             {
                 Console.WriteLine("You are not wearning any armour!.");
             }
+
+
         }
 
         public int GetXp()
         {
-            return Xp;
+            return _experience.Xp;
         }
 
         public void AddToXp(int amount)
         {
-            Xp += amount;
+            _experience.Xp += amount;
             /* Have we gone up a level? */
-            if (Xp > LevelBoundaries[Level])
+            if (_experience.Xp > LevelBoundaries[_experience.Level])
             {
-                Level += 1;
+                _experience.Level += 1;
                 Console.Write("Congratulations, you have gone up a level.");
                 Health += 50;
-                LevelDamageBonus += 20;
+                _experience.LevelDamageBonus += 20;
             }
         }
 
         public int GetDamageBous()
         {
-            return LevelDamageBonus;
+            return _experience.LevelDamageBonus;
         }
 
 
         public SpellBookItem? GetSpellBook()
         {
             /* Assume just one spell book for now. */
-            Item? found = Inventory.Find(item => item.IsSpellBook());
+            Item? found = _inventory.ItemList.Find(item => item.IsSpellBook());
             if (found != null)
             {
-                return (SpellBookItem) found;
+                return (SpellBookItem)found;
             }
             else
             {
@@ -123,7 +120,7 @@ namespace Dungeon
 
         public List<Item> GetInventory()
         {
-            return Inventory;
+            return _inventory.ItemList;
         }
 
         public int GetHealth()
@@ -172,12 +169,12 @@ namespace Dungeon
 
         public void AddToInventory(Item item)
         {
-            Inventory.Add(item);
+            _inventory.AddItem(item);
         }
 
         public void RemoveFromInventory(Item item)
         {
-            Inventory.Remove(item);
+            _inventory.RemoveItem(item);
         }
 
     }

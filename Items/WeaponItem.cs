@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
     public class WeaponItem : Item
     {
         private int damageMultiplier_;
-        public WeaponItem(String name, String description, int damageMultiplier) : base(name, description)
+        public WeaponItem(string name, string description, int damageMultiplier) : base(name, description)
         {
             damageMultiplier_ = damageMultiplier;
         }

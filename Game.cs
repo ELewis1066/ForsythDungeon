@@ -1,10 +1,7 @@
 ﻿using Dungeon.Creatures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Dungeon.Unlock;
+using Dungeon.Items;
+using Dungeon.Players;
+
 
 namespace Dungeon
 {

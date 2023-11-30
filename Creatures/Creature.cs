@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dungeon.Items;
 
-namespace Dungeon
+namespace Dungeon.Creatures
 {
     public class Creature
     {
@@ -21,7 +22,7 @@ namespace Dungeon
 
         public virtual int GetAttackDamage()
         {
-            return (random.Next(50, 200));
+            return random.Next(50, 200);
         }
         public int GetHealth()
         {

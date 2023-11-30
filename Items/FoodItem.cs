@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
     public class FoodItem : Item
     {
         private int HealAmount;
-        public FoodItem(String name, String description, int heals) : base(name, description)
+        public FoodItem(string name, string description, int heals) : base(name, description)
         {
             HealAmount = heals;
         }

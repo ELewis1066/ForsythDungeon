@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
     public class KeyItem : Item
     {
         public int KeyCode { get; set; }
 
-        public KeyItem(string name, string description, int keyCode) : base(name, description) 
-        { 
+        public KeyItem(string name, string description, int keyCode) : base(name, description)
+        {
             KeyCode = keyCode;
         }
 
         public override string ToString()
-        { 
+        {
             return $"(key) {Name}, {Description}";
         }
     }

@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
-  
+
     public class SpellBookItem : Item
     {
         /**
          * At the moment a spell Book only contains one spell.
          */
 
-        private Dictionary<string,int> spells = new Dictionary<string,int>();
+        private Dictionary<string, int> spells = new Dictionary<string, int>();
 
-        public SpellBookItem(String name, String description) : base(name, description) 
+        public SpellBookItem(string name, string description) : base(name, description)
         {
             spells = new Dictionary<string, int>()
             {
@@ -40,7 +40,7 @@ namespace Dungeon
 
         public override string ToString()
         {
-            string spellList = string.Join("\n",spells.Keys.ToList());
+            string spellList = string.Join("\n", spells.Keys.ToList());
             return $"(Spell Book) {Name}, {Description};\n It contains these spells:\n{spellList}";
         }
 

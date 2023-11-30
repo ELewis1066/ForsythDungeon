@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
     public class Item
     {
-        protected String Name;
-        protected String Description;
+        protected string Name;
+        protected string Description;
 
-        public Item(String name, String description)
+        public Item(string name, string description)
         {
             Name = name;
             Description = description;
@@ -23,21 +23,21 @@ namespace Dungeon
 
         public virtual int GetDamageMultiplier()
         {
-            return 1; 
+            return 1;
         }
-        public String GetName()
+        public string GetName()
         {
             return Name;
         }
-        public void SetName(String name)
+        public void SetName(string name)
         {
             Name = name;
         }
-        public String GetDescription()
+        public string GetDescription()
         {
             return Description;
         }
-        public void SetDescription(String description)
+        public void SetDescription(string description)
         {
             Description = description;
         }

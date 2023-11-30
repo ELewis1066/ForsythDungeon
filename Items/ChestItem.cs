@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dungeon
+namespace Dungeon.Items
 {
     public class ChestItem : Item
     {
-        public List<Item> ChestContents {  get; set; }
+        public List<Item> ChestContents { get; set; }
         public bool IsLocked { get; set; }
 
         public int KeyCode { get; set; }
@@ -17,8 +17,8 @@ namespace Dungeon
         public ChestItem(string name, string description, int keyCode) : base(name, description)
         {
             ChestContents = new List<Item>();
-            IsLocked = true; 
-            KeyCode = keyCode; 
+            IsLocked = true;
+            KeyCode = keyCode;
         }
 
         public void PutItemInChest(Item item)
@@ -47,7 +47,7 @@ namespace Dungeon
         public void DisplayContent()
         {
             Console.WriteLine("The chest contains:");
-            Console.WriteLine(string.Join("\n",ChestContents));
+            Console.WriteLine(string.Join("\n", ChestContents));
         }
 
         public void UnlockChest(KeyItem key)
@@ -57,7 +57,7 @@ namespace Dungeon
                 Console.WriteLine("Congratulations you found the right key!");
                 Console.WriteLine("The chest is unlocked...");
                 IsLocked = false;
-                this.ToString();
+                ToString();
             }
             else
             {
@@ -68,7 +68,7 @@ namespace Dungeon
         public override string ToString()
         {
             string repr = $"(chest) {Name}, {Description} Is it locked?: {IsLocked}";
-            if (! IsLocked)
+            if (!IsLocked)
             {
                 foreach (var item in ChestContents)
                 {
